@@ -1,5 +1,6 @@
 import json as json_mod
 import logging
+import os
 import threading
 from typing import Generator
 from uuid import uuid4
@@ -137,6 +138,39 @@ def llm_stream_completion(
 
 def _sse(event: dict) -> str:
     return f"data: {json_mod.dumps(event)}\n\n"
+
+
+def _build_resilient_fallback(phase_id: int, mode: str) -> str:
+    """Return useful coaching when the upstream model stream is unavailable."""
+    phase_names = {
+        0: "Empathize",
+        1: "Conceive",
+        2: "Design",
+        3: "Implement",
+        4: "Test/Revise",
+        5: "Operate",
+    }
+    phase_name = phase_names.get(phase_id, "current")
+    if mode == "review":
+        return (
+            "The AI review service is temporarily unavailable, so I could not validate your "
+            f"{phase_name} evidence just now. Your work has been kept; please retry validation shortly."
+        )
+
+    questions = {
+        0: "Who is the specific user, and what evidence do you have about the problem they experience?",
+        1: "What distinct solution options have you compared, and which criteria will you use to choose one?",
+        2: "What design details, dependencies, and testable requirements still need to be documented?",
+        3: "What is the smallest working increment you can build and verify next?",
+        4: "Which acceptance criterion should you test next, and what measured evidence will count as passing?",
+        5: "Who will receive or operate the solution, and how will you confirm successful delivery?",
+    }
+    question = questions.get(phase_id, "What evidence do you have for completing your current phase?")
+    return (
+        "The AI response service is temporarily unavailable, but your project progress is safe. "
+        f"You are still in Phase {phase_id}: {phase_name}; we should not skip ahead until its evidence is complete. "
+        f"{question}"
+    )
 
 
 def _format_review_snapshot(review_progress: dict) -> str:
@@ -278,7 +312,8 @@ def _prepare_chat_context(
 
     all_criteria_just_met = False
     checklist_state: list[dict] | None = None
-    if mode == "guidance":
+    sync_guidance_validation = os.getenv("ENGIBUDDY_SYNC_GUIDANCE_VALIDATION", "").strip().lower() == "true"
+    if mode == "guidance" and sync_guidance_validation:
         session_messages_so_far = get_messages(session_id=normalized_session_id)
 
         # Capture state BEFORE this turn to detect transitions (Problem 3)
@@ -590,7 +625,7 @@ def process_chat_stream(
         return
 
     if not full_response.strip():
-        full_response = "I could not generate a response right now. Please try again."
+        full_response = _build_resilient_fallback(session.current_phase, mode)
         yield _sse({"type": "token", "token": full_response})
 
     persist_session(normalized_session_id, session)

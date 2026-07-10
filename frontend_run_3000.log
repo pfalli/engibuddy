@@ -1,0 +1,30 @@
+
+> engibuddy@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 3.8s
+ ○ Compiling /guidance ...
+ ✓ Compiled /guidance in 5.7s (583 modules)
+ GET /guidance 200 in 6490ms
+ ✓ Compiled in 724ms (298 modules)
+ GET /guidance 200 in 92ms
+ ○ Compiling / ...
+ ✓ Compiled / in 923ms (514 modules)
+ GET / 307 in 1326ms
+ ✓ Compiled /guidance in 115ms (293 modules)
+ GET /guidance 200 in 306ms
+   Reload env: .env
+ ✓ Compiled in 327ms (570 modules)
+   Reload env: .env
+ ✓ Compiled in 128ms (570 modules)
+   Reload env: .env
+ ✓ Compiled in 109ms (570 modules)
+   Reload env: .env
+ ✓ Compiled in 137ms (570 modules)
+ ○ Compiling /review ...
+ ✓ Compiled /review in 924ms (591 modules)

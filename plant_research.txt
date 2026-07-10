@@ -1,0 +1,4 @@
+Project: Smart Plant Watering System
+    Target Users: Urban apartment dwellers who own houseplants and travel for work.
+    Problem: Plants dry out or get overwatered (leading to root rot) due to irregular manual watering routines.
+    Scope & Constraints: Budget under $25, battery-powered (must last 1 month), water reservoir capacity of 1 Liter.

@@ -9,7 +9,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 from services.session_service import SessionState, auto_validate_session_review
-from services.chat_service import _prepare_chat_context
+from services.chat_service import _prepare_chat_context, _build_resilient_fallback
 from review_mode import REVIEW_CHECKLIST
 
 def test_push_back_in_chat_context():
@@ -241,6 +241,14 @@ def test_push_back_in_stream_path():
         assert active_phases[0]["id"] == 0, f"Expected active phase 0, got {active_phases[0]['id']}"
         print("[OK] test_push_back_in_stream_path passed successfully!")
 
+
+def test_stream_timeout_fallback_is_phase_aware():
+    response = _build_resilient_fallback(0, "guidance")
+
+    assert "Phase 0: Empathize" in response
+    assert "should not skip ahead" in response
+    assert "specific user" in response
+    assert "I could not generate a response right now" not in response
 
 if __name__ == "__main__":
     print("Running EngiBuddy Push-back Mechanism Unit Tests...")

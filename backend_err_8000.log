@@ -1,0 +1,10 @@
+INFO:     Started server process [22900]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:services.chat_service:Pushing back session session-06f35ba2e3e8 (mode=guidance) to oldest incomplete phase: 0 (LLM resolved 1)
+INFO:rag:Rebuilding global RAG vector index: chunks=153 provider=openai model=text-embedding-3-small
+INFO:rag:Rebuilding project RAG vector index: project_id=local-project chunks=1 provider=openai model=text-embedding-3-small
+INFO:rag:Vector RAG hit: phase=0 project=local-project query='i want to do a project of water plant' provider=openai sources=['hybrid-framework.md', 'guidance-methods.md', 'review-help-guidance.md'] scores=[{'final': 1.457, 'cosine': 0.457, 'keyword': 52.5}, {'final': 1.388, 'cosine': 0.388, 'keyword': 43.5}, {'final': 1.384, 'cosine': 0.384, 'keyword': 36.0}]
+INFO:observability:retrieval_metrics | {'request_id': 'req-ab0f33e47ff5', 'phase': 0, 'top_k': 3, 'candidates': 52, 'empty': False, 'aggregate': {'requests': 1, 'empty_rate_pct': 0, 'avg_top_k': 3}}
+INFO:services.chat_service:Injected 1 project artifact(s) into system prompt for session session-06f35ba2e3e8
